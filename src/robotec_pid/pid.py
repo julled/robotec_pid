@@ -51,7 +51,7 @@ class Node:
     def run(self):
         while not rospy.is_shutdown():
             self.pid.setpoint = self.setpoint
-            self.message.data = pid(self.input)
+            self.message.data = self.pid(self.input)
             self.publisher.publish(self.message)
             
             self.rate.sleep()

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package>
+<package format="1">
   <!-- Package data -->
   <name>robotec_pid</name>
   <version>1.0.0</version>
@@ -20,6 +20,6 @@
   <run_depend>message_runtime</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>sensor_msgs</run_depend>
-  <run_depend>simple_pid</run_depend>
-  <depend>dynamic_reconfigure</depend>
+  <run_depend>dynamic_reconfigure</run_depend>
+  <build_depend>dynamic_reconfigure</build_depend>
 </package>
