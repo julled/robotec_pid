@@ -13,6 +13,8 @@ class Node:
         p = rospy.get_param('~p', 1)
         i = rospy.get_param('~i', 0.1)
         d = rospy.get_param('~d', 0.05)
+        limMin = rospy.get_param('~limMin', None)
+        limMax = rospy.get_param('~limMax', None)
         input_topic = rospy.get_param('~input') 
         adjusted_topic = rospy.get_param('~adjusted')
         setpoint_topic = rospy.get_param('~setpoint')
@@ -27,7 +29,10 @@ class Node:
         self.message = Float64()
         self.rate = rospy.Rate(publish_rate)
 
-        self.pid = PID(p, i, d)
+        if not limMin is None and not limMax is None: 
+            self.pid = PID(p, i, d, output_limits=(limMin,limMax))
+        else:
+            self.pid = PID(p, i, d)
         #self.pid.sample_time = publish_rate
         
     def inputCallback(self, msg):
