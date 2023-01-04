@@ -4,6 +4,16 @@ import rospy
 from simple_pid import PID
 from std_msgs.msg import Float64, Float64MultiArray
 from dynamic_reconfigure.server import Server
+import math
+
+def pi_clip(angle):
+    if angle > 0:
+        if angle > math.pi:
+            return angle - 2*math.pi
+    else:
+        if angle < -math.pi:
+            return angle + 2*math.pi
+    return angle
 
 class Node:
     input = 0
@@ -20,6 +30,7 @@ class Node:
         setpoint_topic = rospy.get_param('~setpoint')
         configuration_topic = rospy.get_param('~configuration')
         publish_rate = rospy.get_param('~publish_rate', 100)
+        angular_domain = rospy.get_param('~angular_domain', False)
 
         rospy.Subscriber(input_topic, Float64, self.inputCallback, queue_size=1)
         rospy.Subscriber(setpoint_topic, Float64, self.setpointCallback, queue_size=1)
@@ -33,7 +44,11 @@ class Node:
             self.pid = PID(p, i, d, output_limits=(limMin,limMax))
         else:
             self.pid = PID(p, i, d)
-        #self.pid.sample_time = publish_rate
+        
+        import math
+
+        if angular_domain:
+            self.pid.error_map = pi_clip
         
     def inputCallback(self, msg):
         self.input = msg.data
